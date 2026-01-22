@@ -21,35 +21,38 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: "#f8fafc",           // very light off-white / slate-50
+        foreground: "#0f172a",           // slate-900 for main text
+
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#e94b5f",            // soft red – main buttons & emotional highlights
+          foreground: "#ffffff",
         },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+        accent: {
+          DEFAULT: "#03f7c4",            // mom's favorite aqua – joy accents
+          foreground: "#0f172a",
         },
+        muted: {
+          DEFAULT: "#f1f5f9",            // light gray/off-white for cards & backgrounds
+          foreground: "#475569",         // slate-600 for secondary text
+        },
+        card: {
+          DEFAULT: "#ffffff",            // pure white for gallery cards
+          foreground: "#0f172a",
+        },
+
+        // Keep your existing customs if needed
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
         gold: {
           DEFAULT: "hsl(var(--gold))",
