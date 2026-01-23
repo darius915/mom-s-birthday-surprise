@@ -4,7 +4,7 @@ import WelcomeScreen from "@/components/WelcomeScreen";
 import QuestionCard from "@/components/QuestionCard";
 import SurpriseReveal from "@/components/SurpriseReveal";
 import FloatingDecorations from "@/components/FloatingDecorations";
-import GalleryView from "../components/GalleryView"; // ← your new camera component
+import GalleryView from "@/components/GalleryView"; // ← updated alias import
 
 type Screen =
   | "welcome"
