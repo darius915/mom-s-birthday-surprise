@@ -1,58 +1,40 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const BASE_DIR = "/images/Mom-photos";
+// ✅ Base path works for local & GitHub Pages
+const BASE_DIR = `${import.meta.env.BASE_URL}images/Mom-photos`;
 
-// Each folder has 3 images and 3 personalized messages focusing on her joy
-const galleryData: Record<string, { images: string[]; messages: string[] }> = {
-  Abby: {
-    images: ["1.jpg", "2.jpg", "3.jpg"],
-    messages: [
-      "Abby brings a smile to your heart every day 💖",
-      "Her laughter lights up your world 🌸",
-      "Moments with Abby remind you of pure joy ✨",
-    ],
-  },
-  Husband: {
-    images: ["1.jpg", "2.jpg", "3.jpg"],
-    messages: [
-      "His support and love make your days brighter ❤️",
-      "Every shared smile is a memory you treasure 🌹",
-      "He always lifts your spirits when you need it most 💛",
-    ],
-  },
-  "Milimani family": {
-    images: ["1.jpg", "2.jpg", "3.jpg"],
-    messages: [
-      "Family hugs that make your heart full 🌷",
-      "Laughter together reminds you how loved you are 💖",
-      "They fill your life with warmth and comfort ✨",
-    ],
-  },
-  "Springs kids": {
-    images: ["1.jpg", "2.jpg", "3.jpg"],
-    messages: [
-      "Their joy reflects the love you’ve poured into them 💕",
-      "Watching them grow brings endless happiness 🌸",
-      "Every giggle reminds you of your wonderful care 🌟",
-    ],
-  },
-  friends: {
-    images: ["1.jpg", "2.jpg", "3.jpg"],
-    messages: [
-      "Friends who brighten your days with love 💛",
-      "They walk beside you, making life joyful 🌈",
-      "Every moment shared brings happiness to your heart 💖",
-    ],
-  },
-  son: {
-    images: ["1.jpg", "2.jpg", "3.jpg"],
-    messages: [
-      "Your son reflects all the love you’ve given ❤️",
-      "His laughter reminds you of the beautiful bond 🌟",
-      "Every hug fills your heart with pride and joy 💕",
-    ],
-  },
+const folderMessages: Record<string, [string, string, string]> = {
+  Abby: [
+    "Abby is one of life’s sweetest gifts 🌸",
+    "Her smile brightens every moment 💖",
+    "Moments with Abby fill your heart with joy 💕",
+  ],
+  Husband: [
+    "A loving, steady partner by your side ❤️",
+    "His support has made life beautiful 🌟",
+    "Every memory together is a treasure 💛",
+  ],
+  "Milimani family": [
+    "Family moments filled with laughter 🌷",
+    "Their warmth surrounds you always 💕",
+    "Cherishing these memories makes life richer 🌼",
+  ],
+  "Springs kids": [
+    "Beautiful memories shaped by love 💖",
+    "Your patience and kindness shine through 🌸",
+    "They carry your lessons with joy 🌟",
+  ],
+  friends: [
+    "Friends who feel like family 💕",
+    "Walking with you through life’s seasons 🌷",
+    "Sharing laughter and support always 💛",
+  ],
+  son: [
+    "A son reflecting your love and strength 🌟",
+    "He carries your heart in every action 💖",
+    "Your bond is a beautiful journey 💕",
+  ],
 };
 
 export default function GalleryView({ onComplete }: { onComplete: () => void }) {
@@ -60,16 +42,14 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [ready, setReady] = useState(false);
 
-  // Initialize folders
   useEffect(() => {
-    setFolders(Object.keys(galleryData));
+    setFolders(["Abby", "Husband", "Milimani family", "Springs kids", "friends", "son"]);
   }, []);
 
-  // Cycle through folders automatically every 12s
   useEffect(() => {
     if (!folders.length) return;
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % folders.length);
+      setCurrentIndex((i) => (i + 1) % folders.length);
     }, 12000);
     return () => clearInterval(interval);
   }, [folders]);
@@ -81,30 +61,24 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
   if (!folders.length) return null;
 
   const folder = folders[currentIndex];
-  const data = galleryData[folder];
+  const [mainMsg, leftMsg, rightMsg] = folderMessages[folder] || [
+    "A beautiful reminder of love 💛",
+    "Cherish this moment 🌸",
+    "Joy surrounds you 💖",
+  ];
 
-  const mainPhoto = `${BASE_DIR}/${folder}/${data.images[0]}`;
-  const leftPhoto = `${BASE_DIR}/${folder}/${data.images[1]}`;
-  const rightPhoto = `${BASE_DIR}/${folder}/${data.images[2]}`;
-
-  const mainMessage = data.messages[0];
-  const leftMessage = data.messages[1];
-  const rightMessage = data.messages[2];
+  const mainPhoto = `${BASE_DIR}/${folder}/1.jpg`;
+  const leftPhoto = `${BASE_DIR}/${folder}/2.jpg`;
+  const rightPhoto = `${BASE_DIR}/${folder}/3.jpg`;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFF8E1] via-[#FFE0B2] to-[#FFCC80] flex items-center justify-center px-6 py-10 overflow-hidden relative">
-
-      {/* BACKGROUND MUSIC */}
+    <div className="min-h-screen bg-gradient-to-br from-[#FFF8E1] via-[#FFE0B2] to-[#FFCC80] flex flex-col items-center justify-center px-6 py-10 overflow-hidden relative">
+      {/* Background Music */}
       <audio autoPlay loop className="hidden">
-        <source
-          src="https://www.bensound.com/bensound-music/bensound-tenderness.mp3"
-          type="audio/mpeg"
-        />
-        Your browser does not support the audio element.
+        <source src={`${import.meta.env.BASE_URL}music/birthday-music.mp3`} type="audio/mpeg" />
       </audio>
 
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center gap-10">
-
         {/* TITLE */}
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
@@ -117,45 +91,31 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
 
         {/* COLLAGE */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-10 w-full">
-
           {/* LEFT CARD */}
           <motion.div
-            className="hidden md:flex flex-col items-center w-[34rem] h-[38rem]
+            className="hidden md:flex flex-col items-center w-[38rem] h-[40rem]
                        bg-gradient-to-br from-pink-50 to-pink-100
-                       rounded-3xl shadow-2xl border-8 border-pink-300 p-4"
+                       rounded-3xl shadow-2xl border-12 border-pink-300 p-4"
             initial={{ opacity: 0, x: -120, rotate: -6 }}
             animate={{ opacity: ready ? 1 : 0, x: 0, rotate: -2 }}
             transition={{ duration: 1.6 }}
           >
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={leftPhoto}
-                src={leftPhoto}
-                alt=""
-                className="w-full h-full object-contain rounded-2xl"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1 }}
-              />
-            </AnimatePresence>
-            <p className="mt-4 text-center text-lg text-gray-700 font-medium">
-              {leftMessage}
-            </p>
+            <img src={leftPhoto} alt="" className="w-full h-full object-contain rounded-2xl" />
+            <p className="mt-4 text-center text-lg text-gray-700 font-medium">{leftMsg}</p>
           </motion.div>
 
           {/* CENTER CARD */}
           <motion.div
             className="relative w-full max-w-[50rem] h-[60vh]
                        bg-gradient-to-br from-yellow-50 via-white to-yellow-100
-                       rounded-3xl shadow-2xl border-10 border-yellow-300 p-6"
+                       rounded-3xl shadow-2xl border-12 border-yellow-300 p-6"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.4 }}
           >
             <AnimatePresence mode="wait">
               <motion.img
-                key={mainPhoto}
+                key={currentIndex}
                 src={mainPhoto}
                 alt=""
                 className="w-full h-full object-contain rounded-2xl"
@@ -165,56 +125,40 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
                 transition={{ duration: 1 }}
               />
             </AnimatePresence>
-
-            {/* CENTER MESSAGE */}
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2
-                            bg-white/85 backdrop-blur-md
-                            px-6 py-3 rounded-xl shadow-md
+                            bg-white/85 backdrop-blur-md px-6 py-3 rounded-xl shadow-md
                             text-center text-lg font-semibold text-gray-800">
-              {mainMessage}
+              {mainMsg}
             </div>
           </motion.div>
 
           {/* RIGHT CARD */}
           <motion.div
-            className="hidden md:flex flex-col items-center w-[34rem] h-[38rem]
+            className="hidden md:flex flex-col items-center w-[38rem] h-[40rem]
                        bg-gradient-to-br from-purple-50 to-purple-100
-                       rounded-3xl shadow-2xl border-8 border-purple-300 p-4"
+                       rounded-3xl shadow-2xl border-12 border-purple-300 p-4"
             initial={{ opacity: 0, x: 120, rotate: 6 }}
             animate={{ opacity: ready ? 1 : 0, x: 0, rotate: 2 }}
             transition={{ duration: 1.6 }}
           >
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={rightPhoto}
-                src={rightPhoto}
-                alt=""
-                className="w-full h-full object-contain rounded-2xl"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1 }}
-              />
-            </AnimatePresence>
-            <p className="mt-4 text-center text-lg text-gray-700 font-medium">
-              {rightMessage}
-            </p>
+            <img src={rightPhoto} alt="" className="w-full h-full object-contain rounded-2xl" />
+            <p className="mt-4 text-center text-lg text-gray-700 font-medium">{rightMsg}</p>
           </motion.div>
         </div>
 
         {/* MOBILE SIDE IMAGES */}
-        <div className="md:hidden flex gap-6">
+        <div className="md:hidden flex flex-col gap-6">
           {[leftPhoto, rightPhoto].map((img, i) => (
-            <div
-              key={i}
-              className="w-44 h-64 bg-white rounded-2xl shadow-lg border-4 border-gray-200 p-2"
-            >
+            <div key={i} className="w-full h-64 bg-white rounded-2xl shadow-lg border-4 border-gray-200 p-2">
               <img src={img} className="w-full h-full object-contain rounded-xl" />
+              <p className="mt-2 text-center text-gray-700 font-medium">
+                {i === 0 ? leftMsg : rightMsg}
+              </p>
             </div>
           ))}
         </div>
 
-        {/* CONTINUE */}
+        {/* CONTINUE BUTTON */}
         <button
           onClick={onComplete}
           className="mt-6 bg-gradient-to-r from-[#26C6DA] to-[#00BCD4]
