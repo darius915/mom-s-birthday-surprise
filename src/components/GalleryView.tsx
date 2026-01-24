@@ -3,182 +3,227 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const BASE_DIR = "/images/Mom-photos";
 
-const memoryMessages: Record<string, string> = {
-  "Abby": "Look at Abby! What a joy and blessing she’s been in your life 🌸",
-  "Husband": "You have a wonderful and supportive husband, always by your side ❤️",
-  "Milimani family": "Your Milimani family surrounds you with love, laughter, and warmth 🌷",
-  "Springs kids": "These moments with your kids are priceless – your love shines through them 🎂",
-  "friends": "Friends that feel like family – they’ve made your journey brighter 💕",
-  "son": "Your son carries your strength, kindness, and love everywhere 💖",
+// Each folder has 3 images and 3 personalized messages focusing on her joy
+const galleryData: Record<string, { images: string[]; messages: string[] }> = {
+  Abby: {
+    images: ["1.jpg", "2.jpg", "3.jpg"],
+    messages: [
+      "Abby brings a smile to your heart every day 💖",
+      "Her laughter lights up your world 🌸",
+      "Moments with Abby remind you of pure joy ✨",
+    ],
+  },
+  Husband: {
+    images: ["1.jpg", "2.jpg", "3.jpg"],
+    messages: [
+      "His support and love make your days brighter ❤️",
+      "Every shared smile is a memory you treasure 🌹",
+      "He always lifts your spirits when you need it most 💛",
+    ],
+  },
+  "Milimani family": {
+    images: ["1.jpg", "2.jpg", "3.jpg"],
+    messages: [
+      "Family hugs that make your heart full 🌷",
+      "Laughter together reminds you how loved you are 💖",
+      "They fill your life with warmth and comfort ✨",
+    ],
+  },
+  "Springs kids": {
+    images: ["1.jpg", "2.jpg", "3.jpg"],
+    messages: [
+      "Their joy reflects the love you’ve poured into them 💕",
+      "Watching them grow brings endless happiness 🌸",
+      "Every giggle reminds you of your wonderful care 🌟",
+    ],
+  },
+  friends: {
+    images: ["1.jpg", "2.jpg", "3.jpg"],
+    messages: [
+      "Friends who brighten your days with love 💛",
+      "They walk beside you, making life joyful 🌈",
+      "Every moment shared brings happiness to your heart 💖",
+    ],
+  },
+  son: {
+    images: ["1.jpg", "2.jpg", "3.jpg"],
+    messages: [
+      "Your son reflects all the love you’ve given ❤️",
+      "His laughter reminds you of the beautiful bond 🌟",
+      "Every hug fills your heart with pride and joy 💕",
+    ],
+  },
 };
 
 export default function GalleryView({ onComplete }: { onComplete: () => void }) {
-  const [memories, setMemories] = useState<string[]>([]);
+  const [folders, setFolders] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [ready, setReady] = useState(false);
 
+  // Initialize folders
   useEffect(() => {
-    setMemories(["Abby", "Husband", "Milimani family", "Springs kids", "friends", "son"]);
+    setFolders(Object.keys(galleryData));
   }, []);
 
+  // Cycle through folders automatically every 12s
   useEffect(() => {
-    if (!memories.length) return;
+    if (!folders.length) return;
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % memories.length);
+      setCurrentIndex((prev) => (prev + 1) % folders.length);
     }, 12000);
     return () => clearInterval(interval);
-  }, [memories]);
+  }, [folders]);
 
   useEffect(() => {
-    setTimeout(() => setImagesLoaded(true), 1200);
+    setTimeout(() => setReady(true), 800);
   }, []);
 
-  if (!memories.length) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-3xl font-serif text-[#004D40] px-4 text-center">
-        Preparing a gentle moment just for you, Mom… 💌
-      </div>
-    );
-  }
+  if (!folders.length) return null;
 
-  const folder = memories[currentIndex];
-  const mainPhoto = `${BASE_DIR}/${folder}/1.jpg`;
-  const sidePhoto1 = `${BASE_DIR}/${folder}/2.jpg`;
-  const sidePhoto2 = `${BASE_DIR}/${folder}/3.jpg`;
+  const folder = folders[currentIndex];
+  const data = galleryData[folder];
 
-  const message = memoryMessages[folder] || "Cherished moments and endless love 💛";
+  const mainPhoto = `${BASE_DIR}/${folder}/${data.images[0]}`;
+  const leftPhoto = `${BASE_DIR}/${folder}/${data.images[1]}`;
+  const rightPhoto = `${BASE_DIR}/${folder}/${data.images[2]}`;
 
-  const handleNext = () => onComplete();
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.35, delayChildren: 0.5 } },
-  };
-  const childVariants = {
-    hidden: { opacity: 0, y: 40, scale: 0.98 },
-    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 1.4, ease: [0.4, 0, 0.2, 1] } },
-  };
+  const mainMessage = data.messages[0];
+  const leftMessage = data.messages[1];
+  const rightMessage = data.messages[2];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFF8E1] via-[#FFE0B2] to-[#FFCC80] flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 xl:p-12 overflow-hidden relative">
+    <div className="min-h-screen bg-gradient-to-br from-[#FFF8E1] via-[#FFE0B2] to-[#FFCC80] flex items-center justify-center px-6 py-10 overflow-hidden relative">
 
-      {/* Floating emojis */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-25 sm:opacity-35">
-        {[...Array(6)].map((_, i) => (
+      {/* BACKGROUND MUSIC */}
+      <audio autoPlay loop className="hidden">
+        <source
+          src="https://www.bensound.com/bensound-music/bensound-tenderness.mp3"
+          type="audio/mpeg"
+        />
+        Your browser does not support the audio element.
+      </audio>
+
+      <div className="w-full max-w-7xl mx-auto flex flex-col items-center gap-10">
+
+        {/* TITLE */}
+        <motion.h1
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2 }}
+          className="text-4xl md:text-5xl font-serif text-[#004D40] text-center"
+        >
+          A Life Surrounded by Love
+        </motion.h1>
+
+        {/* COLLAGE */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-10 w-full">
+
+          {/* LEFT CARD */}
           <motion.div
-            key={i}
-            className="absolute text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
-            initial={{ y: "-30vh", x: `${Math.random() * 100}vw`, rotate: Math.random() * 360 - 180, opacity: 0.7 }}
-            animate={{ y: "130vh", rotate: Math.random() * 720 - 360, opacity: [0.7, 1, 0.7] }}
-            transition={{ duration: 35 + Math.random() * 20, repeat: Infinity, delay: i * 2.5, ease: "linear" }}
+            className="hidden md:flex flex-col items-center w-[34rem] h-[38rem]
+                       bg-gradient-to-br from-pink-50 to-pink-100
+                       rounded-3xl shadow-2xl border-8 border-pink-300 p-4"
+            initial={{ opacity: 0, x: -120, rotate: -6 }}
+            animate={{ opacity: ready ? 1 : 0, x: 0, rotate: -2 }}
+            transition={{ duration: 1.6 }}
           >
-            {i % 3 === 0 ? "🌸" : i % 2 === 0 ? "🌷" : "🐶"}
-          </motion.div>
-        ))}
-      </div>
-
-      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="w-full max-w-7xl mx-auto flex flex-col items-center justify-center z-10">
-
-        {/* Header */}
-        <motion.div variants={childVariants} className="text-center mb-3 sm:mb-4 lg:mb-5 xl:mb-6">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif text-[#004D40] drop-shadow-md">
-            Happy Birthday
-          </h1>
-        </motion.div>
-
-        {/* Main content */}
-        <motion.div variants={childVariants} className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 lg:gap-12 w-full">
-
-          {/* Left side photo */}
-          <motion.div
-            className="hidden md:block w-96 lg:w-[32rem] xl:w-[36rem] 2xl:w-[38rem] h-80 lg:h-[34rem] xl:h-[38rem] 2xl:h-[40rem]
-                       bg-gradient-to-br from-pink-50 via-pink-100 to-pink-200 rounded-3xl shadow-2xl overflow-hidden border-10 border-pink-300 relative rotate-[-2deg] p-2"
-            initial={{ opacity: 0, x: -120, rotate: -10, scale: 0.97 }}
-            animate={{ opacity: imagesLoaded ? 1 : 0, x: 0, rotate: -2, scale: 1 }}
-            transition={{ duration: 1.8, ease: [0.4, 0, 0.2, 1], type: "spring", stiffness: 70, damping: 18 }}
-          >
-            <img src={sidePhoto1} alt="Memory" className="w-full h-full object-contain rounded-2xl" />
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={leftPhoto}
+                src={leftPhoto}
+                alt=""
+                className="w-full h-full object-contain rounded-2xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1 }}
+              />
+            </AnimatePresence>
+            <p className="mt-4 text-center text-lg text-gray-700 font-medium">
+              {leftMessage}
+            </p>
           </motion.div>
 
-          {/* Central photo */}
+          {/* CENTER CARD */}
           <motion.div
-            className="relative w-full max-w-[85vw] sm:max-w-[75vw] md:max-w-[52vw] lg:max-w-[50vw] xl:max-w-[48vw] 2xl:max-w-[45vw]
-                       aspect-[3/4] md:aspect-auto max-h-[55vh] sm:max-h-[58vh] md:max-h-[52vh] lg:max-h-[57vh] xl:max-h-[60vh] 2xl:max-h-[65vh]
-                       mx-auto z-20 overflow-hidden"
-            initial={{ opacity: 0, scale: 0.97 }}
+            className="relative w-full max-w-[50rem] h-[60vh]
+                       bg-gradient-to-br from-yellow-50 via-white to-yellow-100
+                       rounded-3xl shadow-2xl border-10 border-yellow-300 p-6"
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.8, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 1.4 }}
           >
-            <div className="relative h-full bg-gradient-to-tr from-yellow-100 via-white to-yellow-50
-                            rounded-3xl shadow-2xl overflow-hidden border-6 lg:border-8 xl:border-10 border-yellow-300 p-3 md:p-5 xl:p-6">
-              <AnimatePresence mode="wait">
-                <motion.img
-                  key={currentIndex}
-                  src={mainPhoto}
-                  alt="Cherished memory"
-                  className="w-full h-full object-cover rounded-2xl"
-                  initial={{ opacity: 0, scale: 1.015 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.015 }}
-                  transition={{ duration: 1.2, ease: [0.4, 0, 0.2, 1] }}
-                />
-              </AnimatePresence>
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={mainPhoto}
+                src={mainPhoto}
+                alt=""
+                className="w-full h-full object-contain rounded-2xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1 }}
+              />
+            </AnimatePresence>
 
-              {/* Overlay message */}
-              <motion.div
-                key={`msg-${currentIndex}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.2 }}
-                className="absolute bottom-3 left-1/2 -translate-x-1/2 w-4/5 bg-white/80 backdrop-blur-sm text-center rounded-md p-3 text-sm sm:text-base md:text-lg font-semibold text-gray-800 shadow-md"
-              >
-                {message}
-              </motion.div>
+            {/* CENTER MESSAGE */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2
+                            bg-white/85 backdrop-blur-md
+                            px-6 py-3 rounded-xl shadow-md
+                            text-center text-lg font-semibold text-gray-800">
+              {mainMessage}
             </div>
           </motion.div>
 
-          {/* Right side photo */}
+          {/* RIGHT CARD */}
           <motion.div
-            className="hidden md:block w-96 lg:w-[32rem] xl:w-[36rem] 2xl:w-[38rem] h-80 lg:h-[34rem] xl:h-[38rem] 2xl:h-[40rem]
-                       bg-gradient-to-br from-purple-50 via-purple-100 to-purple-200 rounded-3xl shadow-2xl overflow-hidden border-10 border-purple-300 relative rotate-[2deg] p-2"
-            initial={{ opacity: 0, x: 120, rotate: 10, scale: 0.97 }}
-            animate={{ opacity: imagesLoaded ? 1 : 0, x: 0, rotate: 2, scale: 1 }}
-            transition={{ duration: 1.8, ease: [0.4, 0, 0.2, 1], type: "spring", stiffness: 70, damping: 18 }}
+            className="hidden md:flex flex-col items-center w-[34rem] h-[38rem]
+                       bg-gradient-to-br from-purple-50 to-purple-100
+                       rounded-3xl shadow-2xl border-8 border-purple-300 p-4"
+            initial={{ opacity: 0, x: 120, rotate: 6 }}
+            animate={{ opacity: ready ? 1 : 0, x: 0, rotate: 2 }}
+            transition={{ duration: 1.6 }}
           >
-            <img src={sidePhoto2} alt="Memory" className="w-full h-full object-contain rounded-2xl" />
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={rightPhoto}
+                src={rightPhoto}
+                alt=""
+                className="w-full h-full object-contain rounded-2xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1 }}
+              />
+            </AnimatePresence>
+            <p className="mt-4 text-center text-lg text-gray-700 font-medium">
+              {rightMessage}
+            </p>
           </motion.div>
-        </motion.div>
+        </div>
 
-        {/* Mobile collage */}
-        <motion.div variants={childVariants} className="flex md:hidden justify-center gap-6 mt-4 mb-4 z-10">
-          {[sidePhoto1, sidePhoto2].map((img, idx) => (
-            <motion.div
-              key={idx}
-              className={`w-44 h-64 bg-gradient-to-br from-white via-gray-100 to-gray-200 rounded-2xl shadow-lg overflow-hidden border-6 border-gray-300 p-2 rotate-[${idx === 0 ? -3 : 3}deg]`}
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.5, ease: [0.4, 0, 0.2, 1] }}
+        {/* MOBILE SIDE IMAGES */}
+        <div className="md:hidden flex gap-6">
+          {[leftPhoto, rightPhoto].map((img, i) => (
+            <div
+              key={i}
+              className="w-44 h-64 bg-white rounded-2xl shadow-lg border-4 border-gray-200 p-2"
             >
-              <img src={img} alt="Memory" className="w-full h-full object-contain rounded-xl" />
-            </motion.div>
+              <img src={img} className="w-full h-full object-contain rounded-xl" />
+            </div>
           ))}
-        </motion.div>
+        </div>
 
-        {/* Button */}
-        <motion.div variants={childVariants} className="mt-4 md:mt-6">
-          <button
-            onClick={handleNext}
-            className="bg-gradient-to-r from-[#26C6DA] to-[#00BCD4] text-white px-6 py-3 md:px-10 md:py-5 rounded-full shadow-2xl text-lg md:text-xl font-medium hover:brightness-110 transition-all flex items-center gap-2 border-2 border-white/30"
-          >
-            More Love Awaits <span className="text-2xl">💕</span>
-          </button>
-        </motion.div>
-      </motion.div>
-
-      {/* Background music */}
-      <audio autoPlay loop className="hidden">
-        <source src="https://www.bensound.com/bensound-music/bensound-tenderness.mp3" type="audio/mpeg" />
-      </audio>
+        {/* CONTINUE */}
+        <button
+          onClick={onComplete}
+          className="mt-6 bg-gradient-to-r from-[#26C6DA] to-[#00BCD4]
+                     text-white px-10 py-4 rounded-full text-xl shadow-xl
+                     hover:brightness-110 transition"
+        >
+          Continue 💕
+        </button>
+      </div>
     </div>
   );
 }

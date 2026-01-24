@@ -2,17 +2,21 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  base: "/mom-s-birthday-surprise/",   // <-- REQUIRED FOR GITHUB PAGES
+export default defineConfig(({ command }) => ({
+  // Local dev MUST be "/"
+  // Build can later be changed for GitHub Pages
+  base: command === "build" ? "/mom-s-birthday-surprise/" : "/",
+
+  plugins: [react()],
+
   server: {
-    host: "::",
+    host: "localhost",
     port: 8080,
     hmr: {
       overlay: false,
     },
   },
-  plugins: [react()],
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

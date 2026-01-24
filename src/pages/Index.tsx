@@ -299,7 +299,7 @@ const Index = () => {
             className="min-h-screen flex items-center justify-center py-12 px-4"
           >
             <QuestionCard
-              question="Before we go on… can I remind you of one more thing?"
+              question="Are you ready for a suprise?"
               options={["Yes 💕"]}
               selectedOption={null}
               onSelect={handleFinalYes}
