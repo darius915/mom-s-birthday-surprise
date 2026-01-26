@@ -66,7 +66,13 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FFF8E1] via-[#FFE0B2] to-[#FFCC80] flex items-center justify-center px-6 py-10 overflow-hidden">
       {/* Background music */}
-      <audio src={import.meta.env.BASE_URL + "audio/nostalgic-piano.mp3"} autoPlay loop preload="auto" />
+      <audio
+        src={import.meta.env.BASE_URL + "audio/nostalgic-piano.mp3"}
+        autoPlay
+        loop
+        preload="auto"
+        muted
+      />
 
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center gap-10">
         <motion.h1
@@ -81,7 +87,7 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
         <div className="flex flex-col md:flex-row items-center justify-center gap-10 w-full">
           {/* LEFT CARD */}
           <motion.div
-            className="hidden md:flex flex-col items-center w-[34rem] h-[38rem] bg-gradient-to-br from-pink-50 to-pink-100 rounded-3xl shadow-2xl border-8 border-pink-300 p-4"
+            className="hidden md:flex flex-col items-center w-[34rem] h-[38rem] bg-gradient-to-br from-pink-50 to-pink-100 rounded-3xl shadow-2xl border-[8px] border-pink-300 p-4"
             initial={{ opacity: 0, x: -120, rotate: -6 }}
             animate={{ opacity: ready ? 1 : 0, x: 0, rotate: -2 }}
             transition={{ duration: 1.6 }}
@@ -92,7 +98,7 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
 
           {/* CENTER CARD */}
           <motion.div
-            className="relative w-full max-w-[50rem] h-[60vh] bg-gradient-to-br from-yellow-50 via-white to-yellow-100 rounded-3xl shadow-2xl border-10 border-yellow-300 p-6"
+            className="relative w-full max-w-[50rem] h-[60vh] bg-gradient-to-br from-yellow-50 via-white to-yellow-100 rounded-3xl shadow-2xl border-[10px] border-yellow-300 p-6"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.4 }}
@@ -117,7 +123,7 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
 
           {/* RIGHT CARD */}
           <motion.div
-            className="hidden md:flex flex-col items-center w-[34rem] h-[38rem] bg-gradient-to-br from-purple-50 to-purple-100 rounded-3xl shadow-2xl border-8 border-purple-300 p-4"
+            className="hidden md:flex flex-col items-center w-[34rem] h-[38rem] bg-gradient-to-br from-purple-50 to-purple-100 rounded-3xl shadow-2xl border-[8px] border-purple-300 p-4"
             initial={{ opacity: 0, x: 120, rotate: 6 }}
             animate={{ opacity: ready ? 1 : 0, x: 0, rotate: 2 }}
             transition={{ duration: 1.6 }}
@@ -142,6 +148,16 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
           className="mt-6 bg-gradient-to-r from-[#26C6DA] to-[#00BCD4] text-white px-10 py-4 rounded-full text-xl shadow-xl hover:brightness-110 transition"
         >
           Continue 💕
+        </button>
+
+        <button
+          onClick={() => {
+            const audio = document.querySelector('audio') as HTMLAudioElement | null;
+            if (audio) audio.muted = false;
+          }}
+          className="mt-2 text-sm text-gray-600 hover:text-gray-800 underline"
+        >
+          🔊 Enable sound
         </button>
       </div>
     </div>
