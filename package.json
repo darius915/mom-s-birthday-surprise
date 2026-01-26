@@ -1,7 +1,7 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "mom-s-birthday-surprise",
+  "version": "0.0.1",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "homepage": "https://darius915.github.io/mom-s-birthday-surprise",
   "scripts": {
