@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const BASE_DIR = import.meta.env.BASE_URL + "images/Mom-photos"; // works locally & deployed
+const BASE_DIR = import.meta.env.BASE_URL + "images/Mom-photos";
 
 const folderMessages: Record<string, { center: string; left: string; right: string }> = {
   Abby: {
@@ -47,7 +47,7 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
 
   useEffect(() => {
     if (!folders.length) return;
-    const interval = setInterval(() => setCurrentIndex((i) => (i + 1) % folders.length), 12000); // slow fade
+    const interval = setInterval(() => setCurrentIndex((i) => (i + 1) % folders.length), 12000);
     return () => clearInterval(interval);
   }, [folders]);
 
@@ -65,7 +65,7 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FFF8E1] via-[#FFE0B2] to-[#FFCC80] flex items-center justify-center px-6 py-10 overflow-hidden">
-      {/* Background music */}
+      {/* Background music – muted so it can autoplay */}
       <audio
         src={import.meta.env.BASE_URL + "audio/nostalgic-piano.mp3"}
         autoPlay
@@ -74,7 +74,7 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
         muted
       />
 
-      <div className="w-full max-w-7xl mx-auto flex flex-col items-center gap-10">
+      <div className="w-full max-w-7xl mx-auto flex flex-col items-center gap-8 md:gap-10">
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -84,7 +84,33 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
           A Life Surrounded by Love
         </motion.h1>
 
-        <div className="flex flex-col md:flex-row items-center justify-center gap-10 w-full">
+        {/* Play Music button – placed near the top */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.4, delay: 0.6 }}
+          className="text-center"
+        >
+          <button
+            onClick={() => {
+              const audio = document.querySelector('audio') as HTMLAudioElement | null;
+              if (audio) {
+                audio.muted = false;
+                // Optional: ensure it starts if it was paused
+                if (audio.paused) audio.play().catch(() => {});
+              }
+            }}
+            className="bg-gradient-to-r from-pink-300 to-purple-300 text-white px-8 py-4 rounded-full text-lg md:text-xl font-semibold shadow-lg hover:brightness-110 hover:scale-105 transition-all duration-300 flex items-center gap-2 mx-auto"
+          >
+            <span>🎶 Play gentle music</span>
+            <span className="text-xl">💕</span>
+          </button>
+          <p className="mt-2 text-sm md:text-base text-gray-600 font-medium">
+            to make the memories even more special 🌸
+          </p>
+        </motion.div>
+
+        <div className="flex flex-col md:flex-row items-center justify-center gap-10 w-full mt-4 md:mt-8">
           {/* LEFT CARD */}
           <motion.div
             className="hidden md:flex flex-col items-center w-[34rem] h-[38rem] bg-gradient-to-br from-pink-50 to-pink-100 rounded-3xl shadow-2xl border-[8px] border-pink-300 p-4"
@@ -112,7 +138,7 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 1.2 }} // slower fade
+                transition={{ duration: 1.2 }}
               />
             </AnimatePresence>
 
@@ -134,30 +160,22 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
         </div>
 
         {/* MOBILE SIDE IMAGES */}
-        <div className="md:hidden flex gap-6">
+        <div className="md:hidden flex gap-6 mt-6">
           {[leftPhoto, rightPhoto].map((img, i) => (
             <div key={i} className="w-44 h-64 bg-white rounded-2xl shadow-lg border-4 border-gray-200 p-2">
               <img src={img} className="w-full h-full object-contain rounded-xl" />
-              <p className="mt-2 text-center text-sm text-gray-700 font-medium">{i === 0 ? messages.left : messages.right}</p>
+              <p className="mt-2 text-center text-sm text-gray-700 font-medium">
+                {i === 0 ? messages.left : messages.right}
+              </p>
             </div>
           ))}
         </div>
 
         <button
           onClick={onComplete}
-          className="mt-6 bg-gradient-to-r from-[#26C6DA] to-[#00BCD4] text-white px-10 py-4 rounded-full text-xl shadow-xl hover:brightness-110 transition"
+          className="mt-8 bg-gradient-to-r from-[#26C6DA] to-[#00BCD4] text-white px-10 py-4 rounded-full text-xl shadow-xl hover:brightness-110 transition"
         >
           Continue 💕
-        </button>
-
-        <button
-          onClick={() => {
-            const audio = document.querySelector('audio') as HTMLAudioElement | null;
-            if (audio) audio.muted = false;
-          }}
-          className="mt-2 text-sm text-gray-600 hover:text-gray-800 underline"
-        >
-          🔊 Enable sound
         </button>
       </div>
     </div>
