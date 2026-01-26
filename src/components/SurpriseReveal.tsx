@@ -142,7 +142,7 @@ const SurpriseReveal = ({ onRestart, feelingBefore, feelingAfter }: SurpriseReve
               }}
               className="px-10 py-5 rounded-full bg-primary text-primary-foreground font-display text-xl font-semibold shadow-lg hover:shadow-glow transition-all"
             >
-              🎈 More Love & Confetti! 🎈
+              🎉 Endless Love? 💖
             </motion.button>
 
             <button

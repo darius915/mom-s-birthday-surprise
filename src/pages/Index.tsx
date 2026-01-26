@@ -223,7 +223,7 @@ const Index = () => {
         {/* Final Closure */}
         {currentScreen === "final-closure" && (
           <motion.div key="final" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="min-h-screen flex items-center justify-center py-12 px-4">
-            <QuestionCard question="Are you ready for a suprise?" options={["Yes 💕"]} selectedOption={null} onSelect={handleFinalYes} questionNumber={3} totalQuestions={3} />
+            <QuestionCard question="More Love?" options={["Yes 💕"]} selectedOption={null} onSelect={handleFinalYes} questionNumber={3} totalQuestions={3} />
           </motion.div>
         )}
 
