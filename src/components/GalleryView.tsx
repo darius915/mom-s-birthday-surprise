@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import cameraImage from "/images/camera-pink.png";
 
-// ✅ Base path works for local & GitHub Pages
+// Base path (GitHub Pages safe)
 const BASE_DIR = `${import.meta.env.BASE_URL}images/Mom-photos`;
 
 const folderMessages: Record<string, [string, string, string]> = {
@@ -43,7 +44,14 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setFolders(["Abby", "Husband", "Milimani family", "Springs kids", "friends", "son"]);
+    setFolders([
+      "Abby",
+      "Husband",
+      "Milimani family",
+      "Springs kids",
+      "friends",
+      "son",
+    ]);
   }, []);
 
   useEffect(() => {
@@ -61,113 +69,109 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
   if (!folders.length) return null;
 
   const folder = folders[currentIndex];
-  const [mainMsg, leftMsg, rightMsg] = folderMessages[folder] || [
-    "A beautiful reminder of love 💛",
-    "Cherish this moment 🌸",
-    "Joy surrounds you 💖",
-  ];
+  const [mainMsg, leftMsg, rightMsg] = folderMessages[folder];
 
   const mainPhoto = `${BASE_DIR}/${folder}/1.jpg`;
   const leftPhoto = `${BASE_DIR}/${folder}/2.jpg`;
   const rightPhoto = `${BASE_DIR}/${folder}/3.jpg`;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFF8E1] via-[#FFE0B2] to-[#FFCC80] flex flex-col items-center justify-center px-6 py-10 overflow-hidden relative">
-      {/* Background Music */}
+    <div className="min-h-screen bg-gradient-to-br from-[#FFF8E1] via-[#FFE0B2] to-[#FFCC80] flex items-center justify-center overflow-hidden relative">
+
+      {/* 🎵 Background Music (RESTORED) */}
       <audio autoPlay loop className="hidden">
-        <source src={`${import.meta.env.BASE_URL}music/birthday-music.mp3`} type="audio/mpeg" />
+        <source
+          src={`${import.meta.env.BASE_URL}music/birthday-music.mp3`}
+          type="audio/mpeg"
+        />
       </audio>
 
-      <div className="w-full max-w-7xl mx-auto flex flex-col items-center gap-10">
-        {/* TITLE */}
-        <motion.h1
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2 }}
-          className="text-4xl md:text-5xl font-serif text-[#004D40] text-center"
-        >
-          A Life Surrounded by Love
-        </motion.h1>
+      {/* CAMERA SCALE WRAPPER */}
+      <div className="scale-[0.9] md:scale-[0.75] origin-center">
 
-        {/* COLLAGE */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-10 w-full">
-          {/* LEFT CARD */}
-          <motion.div
-            className="hidden md:flex flex-col items-center w-[38rem] h-[40rem]
-                       bg-gradient-to-br from-pink-50 to-pink-100
-                       rounded-3xl shadow-2xl border-12 border-pink-300 p-4"
-            initial={{ opacity: 0, x: -120, rotate: -6 }}
-            animate={{ opacity: ready ? 1 : 0, x: 0, rotate: -2 }}
-            transition={{ duration: 1.6 }}
-          >
-            <img src={leftPhoto} alt="" className="w-full h-full object-contain rounded-2xl" />
-            <p className="mt-4 text-center text-lg text-gray-700 font-medium">{leftMsg}</p>
-          </motion.div>
+        <div className="relative w-full max-w-[760px] mx-auto">
 
-          {/* CENTER CARD */}
-          <motion.div
-            className="relative w-full max-w-[50rem] h-[60vh]
-                       bg-gradient-to-br from-yellow-50 via-white to-yellow-100
-                       rounded-3xl shadow-2xl border-12 border-yellow-300 p-6"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.4 }}
+          {/* CAMERA IMAGE */}
+          <img
+            src={cameraImage}
+            alt="Camera"
+            className="w-full h-auto drop-shadow-2xl select-none"
+            draggable={false}
+          />
+
+          {/* CAMERA SCREEN */}
+          <div
+            className="absolute rounded-[6%] overflow-hidden bg-black"
+            style={{
+              top: "11%",
+              left: "10%",
+              right: "10%",
+              bottom: "22%",
+            }}
           >
             <AnimatePresence mode="wait">
-              <motion.img
+              <motion.div
                 key={currentIndex}
-                src={mainPhoto}
-                alt=""
-                className="w-full h-full object-contain rounded-2xl"
+                className="relative w-full h-full"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 1 }}
-              />
+              >
+                <img
+                  src={mainPhoto}
+                  className="w-full h-full object-cover"
+                />
+
+                {/* MAIN TEXT OVERLAY */}
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/55 backdrop-blur-md text-white px-4 py-2 rounded-xl text-sm md:text-base text-center max-w-[90%]">
+                  {mainMsg}
+                </div>
+              </motion.div>
             </AnimatePresence>
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2
-                            bg-white/85 backdrop-blur-md px-6 py-3 rounded-xl shadow-md
-                            text-center text-lg font-semibold text-gray-800">
-              {mainMsg}
-            </div>
-          </motion.div>
+          </div>
 
-          {/* RIGHT CARD */}
+          {/* LEFT PHOTO */}
           <motion.div
-            className="hidden md:flex flex-col items-center w-[38rem] h-[40rem]
-                       bg-gradient-to-br from-purple-50 to-purple-100
-                       rounded-3xl shadow-2xl border-12 border-purple-300 p-4"
-            initial={{ opacity: 0, x: 120, rotate: 6 }}
-            animate={{ opacity: ready ? 1 : 0, x: 0, rotate: 2 }}
-            transition={{ duration: 1.6 }}
+            className="absolute"
+            style={{ top: "14%", left: "-6%", width: "26%", height: "54%" }}
+            initial={{ opacity: 0, x: -60, rotate: -14 }}
+            animate={{ opacity: ready ? 1 : 0, x: 0, rotate: -10 }}
+            transition={{ duration: 1.3 }}
           >
-            <img src={rightPhoto} alt="" className="w-full h-full object-contain rounded-2xl" />
-            <p className="mt-4 text-center text-lg text-gray-700 font-medium">{rightMsg}</p>
+            <div className="relative w-full h-full bg-white rounded-xl shadow-xl overflow-hidden">
+              <img src={leftPhoto} className="w-full h-full object-cover" />
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/55 text-white text-xs px-3 py-1 rounded-lg text-center">
+                {leftMsg}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* RIGHT PHOTO */}
+          <motion.div
+            className="absolute"
+            style={{ top: "14%", right: "-6%", width: "26%", height: "54%" }}
+            initial={{ opacity: 0, x: 60, rotate: 14 }}
+            animate={{ opacity: ready ? 1 : 0, x: 0, rotate: 10 }}
+            transition={{ duration: 1.3 }}
+          >
+            <div className="relative w-full h-full bg-white rounded-xl shadow-xl overflow-hidden">
+              <img src={rightPhoto} className="w-full h-full object-cover" />
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/55 text-white text-xs px-3 py-1 rounded-lg text-center">
+                {rightMsg}
+              </div>
+            </div>
           </motion.div>
         </div>
-
-        {/* MOBILE SIDE IMAGES */}
-        <div className="md:hidden flex flex-col gap-6">
-          {[leftPhoto, rightPhoto].map((img, i) => (
-            <div key={i} className="w-full h-64 bg-white rounded-2xl shadow-lg border-4 border-gray-200 p-2">
-              <img src={img} className="w-full h-full object-contain rounded-xl" />
-              <p className="mt-2 text-center text-gray-700 font-medium">
-                {i === 0 ? leftMsg : rightMsg}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* CONTINUE BUTTON */}
-        <button
-          onClick={onComplete}
-          className="mt-6 bg-gradient-to-r from-[#26C6DA] to-[#00BCD4]
-                     text-white px-10 py-4 rounded-full text-xl shadow-xl
-                     hover:brightness-110 transition"
-        >
-          Continue 💕
-        </button>
       </div>
+
+      {/* CONTINUE */}
+      <button
+        onClick={onComplete}
+        className="absolute bottom-8 right-8 bg-gradient-to-r from-[#26C6DA] to-[#00BCD4] text-white px-8 py-3 rounded-full text-lg shadow-xl hover:brightness-110 transition"
+      >
+        Continue 💕
+      </button>
     </div>
   );
 }
