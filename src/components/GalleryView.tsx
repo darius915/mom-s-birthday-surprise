@@ -1,44 +1,41 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Audio import from public folder
-import nostalgicPiano from "/audio/nostalgic-piano.mp3";
+const BASE_DIR = import.meta.env.BASE_URL + "images/Mom-photos";
 
-const BASE_DIR = "/images/Mom-photos";
-
-const folderMessages: Record<
-  string,
-  { left: string; center: string; right: string }
-> = {
+/**
+ * Folder-based sweet messages
+ */
+const folderMessages: Record<string, { left: string; center: string; right: string }> = {
   Abby: {
-    left: "Abby is one of life’s sweetest gifts — a constant reminder of love and joy 🌸",
-    center: "Abby brings warmth and laughter into your life every single day 💖",
-    right: "Moments with Abby are treasures that light up your heart ✨",
+    left: "Abby fills every day with laughter and warmth 🌸",
+    center: "A memory of love, fun, and precious moments with you 💖",
+    right: "Abby is a constant reminder of joy and tenderness 🌷",
   },
   Husband: {
-    left: "A loving, steady partner who always walks beside you ❤️",
-    center: "Your bond is filled with love, patience, and shared memories 💕",
-    right: "Together you two make every ordinary day extraordinary 🌟",
+    left: "A loving partner who's always been your rock ❤️",
+    center: "Mom, look at how your partnership has bloomed beautifully 💑",
+    right: "Every day together is a story of care, patience, and love 💕",
   },
   "Milimani family": {
-    left: "Family moments filled with laughter and a deep sense of belonging 🌷",
-    center: "Every hug and smile reminds you how much love surrounds you 💛",
-    right: "These memories bring joy and warmth to your heart 🌼",
+    left: "Family gatherings that light up your heart 🌟",
+    center: "Mom, the laughter here is all because of your love 💛",
+    right: "Cherished memories of joy and togetherness 🌸",
   },
   "Springs kids": {
-    left: "Beautiful memories shaped by kindness, patience, and love 💖",
-    center: "Your children’s laughter is a reflection of your care 🌟",
-    right: "They make every day brighter just by being themselves ✨",
+    left: "Little moments that show how much you care 💖",
+    center: "Your guidance has shaped beautiful lives 🌼",
+    right: "Every smile here reflects your kindness and patience 🌷",
   },
   friends: {
-    left: "Friends who feel like family, walking through life’s seasons 💕",
-    center: "Their support brings happiness and light to your days 🌈",
-    right: "Cherished bonds that always lift your spirit 🌸",
+    left: "Friends who are like family — thanks to your warmth 💕",
+    center: "You’ve created bonds that last a lifetime 💛",
+    right: "Every laugh is brighter because of your heart 🌟",
   },
   son: {
-    left: "A son who reflects your strength, heart, and everything you’ve poured into him 🌟",
-    center: "His joy and growth are a testament to your love 💛",
-    right: "Moments shared with him are priceless memories 💖",
+    left: "A son who mirrors your strength and love 🌟",
+    center: "Mom, your guidance has shaped every success 💖",
+    right: "Every achievement here has your love behind it ❤️",
   },
 };
 
@@ -58,12 +55,12 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
     ]);
   }, []);
 
+  // Cottage rotation animation
   useEffect(() => {
     if (!folders.length) return;
-
     const interval = setInterval(() => {
       setCurrentIndex((i) => (i + 1) % folders.length);
-    }, 12000); // 12 seconds per memory
+    }, 12000); // 12 seconds per cottage
     return () => clearInterval(interval);
   }, [folders]);
 
@@ -74,17 +71,15 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
   if (!folders.length) return null;
 
   const folder = folders[currentIndex];
-  const leftPhoto = `${BASE_DIR}/${folder}/2.jpg`;
   const mainPhoto = `${BASE_DIR}/${folder}/1.jpg`;
+  const leftPhoto = `${BASE_DIR}/${folder}/2.jpg`;
   const rightPhoto = `${BASE_DIR}/${folder}/3.jpg`;
   const messages = folderMessages[folder];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FFF8E1] via-[#FFE0B2] to-[#FFCC80] flex items-center justify-center px-6 py-10 overflow-hidden">
-      {/* Music */}
-      <audio src={nostalgicPiano} autoPlay loop />
-
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center gap-10">
+
         {/* TITLE */}
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
@@ -97,9 +92,10 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
 
         {/* COLLAGE */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-10 w-full">
+
           {/* LEFT CARD */}
           <motion.div
-            className="hidden md:flex flex-col items-center w-full max-w-[28rem] h-[38rem]
+            className="hidden md:flex flex-col items-center w-[34rem] h-[38rem]
                        bg-gradient-to-br from-pink-50 to-pink-100
                        rounded-3xl shadow-2xl border-8 border-pink-300 p-4"
             initial={{ opacity: 0, x: -120, rotate: -6 }}
@@ -108,7 +104,7 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
           >
             <img
               src={leftPhoto}
-              alt=""
+              alt={`${folder} left`}
               className="w-full h-full object-contain rounded-2xl"
             />
             <p className="mt-4 text-center text-lg text-gray-700 font-medium">
@@ -129,12 +125,12 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
               <motion.img
                 key={currentIndex}
                 src={mainPhoto}
-                alt=""
+                alt={`${folder} main`}
                 className="w-full h-full object-contain rounded-2xl"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 1.5 }} // slower fade
+                transition={{ duration: 1.5 }} // slower fade for nostalgic feel
               />
             </AnimatePresence>
 
@@ -149,7 +145,7 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
 
           {/* RIGHT CARD */}
           <motion.div
-            className="hidden md:flex flex-col items-center w-full max-w-[28rem] h-[38rem]
+            className="hidden md:flex flex-col items-center w-[34rem] h-[38rem]
                        bg-gradient-to-br from-purple-50 to-purple-100
                        rounded-3xl shadow-2xl border-8 border-purple-300 p-4"
             initial={{ opacity: 0, x: 120, rotate: 6 }}
@@ -158,7 +154,7 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
           >
             <img
               src={rightPhoto}
-              alt=""
+              alt={`${folder} right`}
               className="w-full h-full object-contain rounded-2xl"
             />
             <p className="mt-4 text-center text-lg text-gray-700 font-medium">
@@ -169,20 +165,20 @@ export default function GalleryView({ onComplete }: { onComplete: () => void }) 
 
         {/* MOBILE SIDE IMAGES */}
         <div className="md:hidden flex gap-6">
-          {[leftPhoto, rightPhoto].map((img, i) => (
+          {[leftPhoto, mainPhoto, rightPhoto].map((img, i) => (
             <div
               key={i}
               className="w-44 h-64 bg-white rounded-2xl shadow-lg border-4 border-gray-200 p-2"
             >
               <img src={img} className="w-full h-full object-contain rounded-xl" />
-              <p className="mt-2 text-center text-sm text-gray-700 font-medium">
-                {i === 0 ? messages.left : messages.right}
+              <p className="mt-2 text-sm text-gray-700 text-center">
+                {i === 0 ? messages.left : i === 1 ? messages.center : messages.right}
               </p>
             </div>
           ))}
         </div>
 
-        {/* CONTINUE */}
+        {/* CONTINUE BUTTON */}
         <button
           onClick={onComplete}
           className="mt-6 bg-gradient-to-r from-[#26C6DA] to-[#00BCD4]
